@@ -1,6 +1,6 @@
-img = imread('/Users/Josephvalentine/Documents/code/give/knee_mri.jpg');
-img = double(rgb2gray(img));
-imshow(img,[]);
+% img = imread('/Users/Josephvalentine/Documents/code/give/knee_mri.jpg');
+% img = double(rgb2gray(img));
+% imshow(img,[]);
 
 %tr=1000; %arbitrary time units
 y=zeros(10,1000);

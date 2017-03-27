@@ -82,12 +82,11 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 img = imread(get(handles.filepath,'String'));
 img = double(rgb2gray(img));
-img_sampled = zeros(size(img));
-% imshow(img,[],'Parent',handles.image_plot);
+imshow(zeros(size(img)),[],'Parent',handles.image_plot);
 
 IMG = fftshift(fft2(img));
 IMG_SAMPLED = zeros(size(img));
-% imshow(log(abs(IMG)),[],'Parent',handles.kspace_plot);
+imshow(zeros(size(img)),[],'Parent',handles.kspace_plot);
 
 load(get(handles.gradient_data,'String'));
 
@@ -110,8 +109,8 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         
 %         get corresponding kspace data and plot
         
-        kx = sum(x(m,1:n))*size(img,2)/2 / 100;
-        ky = sum(y(m,1:n))*size(img,1)/2 / 100;
+        kx = sum(x(m,1:n)) * size(img,2)/2 / 100;
+        ky = -sum(y(m,1:n)) * size(img,1)/2 / 100;
         
 %         shift center to zero
         kx = int32(kx + size(img,2)/2);
@@ -139,7 +138,7 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
             IMG_SAMPLED(ky,kx)=IMG(ky,kx);
             img_sampled = ifft2(fftshift(IMG_SAMPLED));
             if(mod(n,10) == 0)
-                 imshow(abs(img_sampled),[],'Parent',handles.image_plot);
+                imshow(abs(img_sampled),[],'Parent',handles.image_plot);
                 imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
             end
         end
