@@ -52,6 +52,8 @@ function give_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to give (see VARARGIN)
 
+clear handles.image_plot
+clear handles.kspace_plot
 % Choose default command line output for give
 handles.output = hObject;
 
@@ -80,24 +82,74 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 img = imread(get(handles.filepath,'String'));
 img = double(rgb2gray(img));
-imshow(img,[],'Parent',handles.image_plot);
+img_sampled = zeros(size(img));
+% imshow(img,[],'Parent',handles.image_plot);
 
 IMG = fftshift(fft2(img));
-imshow(log(abs(IMG)),[],'Parent',handles.kspace_plot);
+IMG_SAMPLED = zeros(size(img));
+% imshow(log(abs(IMG)),[],'Parent',handles.kspace_plot);
 
 load(get(handles.gradient_data,'String'));
-plot(y,'Parent',handles.ygrad_plot);
-handles.ygrad_plot.YLim = [-1.1, 1.1];
-plot(adc,'Parent',handles.adc_plot);
-handles.adc_plot.YLim = [-0.05, 1.05];
-pause('on');
-time = zeros(1,1000);
-for n = 1:1000
-    time(1:n) = 1;
-    plot(x .* time,'Parent',handles.xgrad_plot);
-    handles.xgrad_plot.YLim = [-1.1, 1.1];
-    pause(0.01);
+
+for m = 1:size(x,1) %assume that x y and adc all have same number of trs
+    pause('on');
+    for n = 1:1000
+        
+%         handle the drawing of gradient waveforms
+        plot(x(m,1:n),'Parent',handles.xgrad_plot);
+        handles.xgrad_plot.YLim = [-1.1, 1.1];
+        handles.xgrad_plot.XLim = [0, 1000];
+        
+        plot(y(m,1:n),'Parent',handles.ygrad_plot);
+        handles.ygrad_plot.YLim = [-1.1, 1.1];
+        handles.ygrad_plot.XLim = [0, 1000];
+    
+        plot(adc(m,1:n),'Parent',handles.adc_plot);
+        handles.adc_plot.YLim = [-0.05, 1.05];
+        handles.adc_plot.XLim = [0, 1000];
+        
+%         get corresponding kspace data and plot
+        
+        kx = sum(x(m,1:n))*size(img,2)/2 / 100;
+        ky = sum(y(m,1:n))*size(img,1)/2 / 100;
+        
+%         shift center to zero
+        kx = int32(kx + size(img,2)/2);
+        ky = int32(ky + size(img,1)/2);
+        
+        if kx > size(img,2)
+            kx = size(img,2);
+        end
+        
+        if ky > size(img,1)
+            ky = size(img,1);
+        end
+        
+         if kx < 1
+            kx = 1;
+        end
+        
+        if ky < 1
+            ky = 1;
+        end
+        
+        if(adc(m,n) ~= 0)
+%             ky
+%             kx
+            IMG_SAMPLED(ky,kx)=IMG(ky,kx);
+            img_sampled = ifft2(fftshift(IMG_SAMPLED));
+            if(mod(n,10) == 0)
+                 imshow(abs(img_sampled),[],'Parent',handles.image_plot);
+                imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
+            end
+        end
+
+        pause(0.001);
+    end
 end
+
+%             imshow(abs(img_sampled),[],'Parent',handles.image_plot);
+%             imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
 % time(1:10) = 1;
 % plot(x .* time,'Parent',handles.xgrad_plot);
 % handles.xgrad_plot.YLim = [-1.1, 1.1];
