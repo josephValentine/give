@@ -90,9 +90,28 @@ imshow(zeros(size(img)),[],'Parent',handles.kspace_plot);
 
 load(get(handles.gradient_data,'String'));
 
+sizeX = size(img, 2);
+sizeY = size(img, 1);
+maxX = sizeX / 2;
+maxY = sizeY / 2;
+
+% The following removes the need to reset YLim and XLim each loop iteration, but
+% I don't know how to reset the plot between each TR.
+% handles.xgrad_plot.YLim = [-1.1, 1.1];
+% handles.xgrad_plot.XLim = [0, 1000];
+% hold(handles.xgrad_plot, 'all');
+% 
+% handles.ygrad_plot.YLim = [-1.1, 1.1];
+% handles.ygrad_plot.XLim = [0, 1000];
+% hold(handles.ygrad_plot, 'all');
+% 
+% handles.adc_plot.YLim = [-0.05, 1.05];
+% handles.adc_plot.XLim = [0, 1000];
+% hold(handles.adc_plot, 'all');
+
 for m = 1:size(x,1) %assume that x y and adc all have same number of trs
     pause('on');
-    for n = 1:1000
+	for n = 1:1000
         
 %         handle the drawing of gradient waveforms
         plot(x(m,1:n),'Parent',handles.xgrad_plot);
@@ -109,18 +128,18 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         
 %         get corresponding kspace data and plot
         
-        kx = sum(x(m,1:n)) * size(img,2)/2 / 100;
-        ky = -sum(y(m,1:n)) * size(img,1)/2 / 100;
+        kx = sum(x(m,1:n)) * maxX / 100;
+        ky = -sum(y(m,1:n)) * maxY / 100;
         
 %         shift center to zero
-        kx = int32(kx + size(img,2)/2);
-        ky = int32(ky + size(img,1)/2);
+        kx = int32(kx + maxX);
+        ky = int32(ky + maxY);
         
-        if kx > size(img,2)
+        if kx > sizeX
             kx = size(img,2);
         end
         
-        if ky > size(img,1)
+        if ky > sizeY
             ky = size(img,1);
         end
         
@@ -144,7 +163,7 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         end
 
         pause(0.001);
-    end
+	end
 end
 
 %             imshow(abs(img_sampled),[],'Parent',handles.image_plot);
