@@ -1,20 +1,22 @@
-% img = imread('/Users/Josephvalentine/Documents/code/give/knee_mri.jpg');
-% img = double(rgb2gray(img));
-% imshow(img,[]);
+% This creates gradient waveforms for a spiral trajectory.
 
-%tr=1000; %arbitrary time units
-y=zeros(128,128+64);
-x=zeros(128,128+64);
-for m=1:128
-    y(m,1:64)=(m-65)/64;
+numTRs = 16;
+gradLength = 200;
+
+y = zeros(numTRs,gradLength);
+x = zeros(numTRs,gradLength);
+
+
+t = 1/gradLength:1/gradLength:1;
+f = 5; % This affects how many times you circle around the origin
+n = t*5; % This affects how far out in k-space you go
+
+for k = 1:numTRs
+	y(k,:) = n .* sin(2*pi*f*t + (k - 1) * pi / (numTRs/2));
+	x(k,:) = n .* cos(2*pi*f*t + (k - 1) * pi / (numTRs/2));
 end
 
 
-
-x(:,1:64)=-1;
-x(:,65:128+64)=1;
-
-adc=ones(128,128+64);
-adc(:,65:128+64)=1;
+adc = ones(numTRs,gradLength);
 
 save('gradient_data')

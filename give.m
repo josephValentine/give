@@ -96,6 +96,11 @@ sizeY = size(img, 1);
 maxX = sizeX / 2;
 maxY = sizeY / 2;
 
+plotMaxY = max(max(y)) + 0.05;
+plotMinY = min(min(y)) - 0.05;
+plotMaxX = max(max(x)) + 0.05;
+plotMinX = min(min(x)) - 0.05;
+
 % The following removes the need to reset YLim and XLim each loop iteration, but
 % I don't know how to reset the plot between each TR.
 % handles.xgrad_plot.YLim = [-1.1, 1.1];
@@ -120,11 +125,11 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
 %         handle the drawing of gradient waveforms
         if(mod(n,20) == 0)
             plot(x(m,1:n),'Parent',handles.xgrad_plot);
-            handles.xgrad_plot.YLim = [-1.1, 1.1];
+            handles.xgrad_plot.YLim = [plotMinX, plotMaxX];
             handles.xgrad_plot.XLim = [0, size(x,2)];
 
             plot(y(m,1:n),'Parent',handles.ygrad_plot);
-            handles.ygrad_plot.YLim = [-1.1, 1.1];
+            handles.ygrad_plot.YLim = [plotMinY, plotMaxY];
             handles.ygrad_plot.XLim = [0, size(x,2)];
 
             plot(adc(m,1:n),'Parent',handles.adc_plot);
@@ -170,16 +175,16 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         end
 
         pause(0.00000001);
-    end
+	end
     img_sampled = ifft2(fftshift(IMG_SAMPLED));
     imshow(abs(img_sampled),[],'Parent',handles.image_plot);
     imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
     plot(x(m,1:n),'Parent',handles.xgrad_plot);
-    handles.xgrad_plot.YLim = [-1.1, 1.1];
+    handles.xgrad_plot.YLim = [plotMinX, plotMaxX];
     handles.xgrad_plot.XLim = [0, size(x,2)];
 
     plot(y(m,1:n),'Parent',handles.ygrad_plot);
-    handles.ygrad_plot.YLim = [-1.1, 1.1];
+    handles.ygrad_plot.YLim = [plotMinY, plotMaxY];
     handles.ygrad_plot.XLim = [0, size(x,2)];
 
     plot(adc(m,1:n),'Parent',handles.adc_plot);
