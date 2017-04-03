@@ -114,6 +114,7 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
     pause('on');
     kxtemp = 0;
     kytemp = 0;
+    hold(handles.kspace_plot, 'all');
 	for n = 1:size(x,2)
         
 %         handle the drawing of gradient waveforms
@@ -156,6 +157,9 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
             ky = 1;
         end
         
+%         if(mod(n,5) == 0)
+%          plot(kx,ky,'r.','MarkerSize',20, 'Parent',handles.kspace_plot)
+%         end
         if(adc(m,n) ~= 0)
             IMG_SAMPLED(ky,kx)=IMG(ky,kx);
             if(mod(n,20) == 0)
