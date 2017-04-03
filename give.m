@@ -52,8 +52,8 @@ function give_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to give (see VARARGIN)
 
-clear handles.image_plot
-clear handles.kspace_plot
+% clear handles.image_plot
+% clear handles.kspace_plot
 % Choose default command line output for give
 handles.output = hObject;
 
@@ -81,6 +81,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 img = imread(get(handles.filepath,'String'));
+img = imresize(img,[128 128]);
 img = double(rgb2gray(img));
 imshow(zeros(size(img)),[],'Parent',handles.image_plot);
 
@@ -111,29 +112,33 @@ maxY = sizeY / 2;
 
 for m = 1:size(x,1) %assume that x y and adc all have same number of trs
     pause('on');
-	for n = 1:1000
+    kxtemp = 0;
+    kytemp = 0;
+	for n = 1:size(x,2)
         
 %         handle the drawing of gradient waveforms
-        plot(x(m,1:n),'Parent',handles.xgrad_plot);
-        handles.xgrad_plot.YLim = [-1.1, 1.1];
-        handles.xgrad_plot.XLim = [0, 1000];
-        
-        plot(y(m,1:n),'Parent',handles.ygrad_plot);
-        handles.ygrad_plot.YLim = [-1.1, 1.1];
-        handles.ygrad_plot.XLim = [0, 1000];
-    
-        plot(adc(m,1:n),'Parent',handles.adc_plot);
-        handles.adc_plot.YLim = [-0.05, 1.05];
-        handles.adc_plot.XLim = [0, 1000];
+        if(mod(n,20) == 0)
+            plot(x(m,1:n),'Parent',handles.xgrad_plot);
+            handles.xgrad_plot.YLim = [-1.1, 1.1];
+            handles.xgrad_plot.XLim = [0, size(x,2)];
+
+            plot(y(m,1:n),'Parent',handles.ygrad_plot);
+            handles.ygrad_plot.YLim = [-1.1, 1.1];
+            handles.ygrad_plot.XLim = [0, size(x,2)];
+
+            plot(adc(m,1:n),'Parent',handles.adc_plot);
+            handles.adc_plot.YLim = [-0.05, 1.05];
+            handles.adc_plot.XLim = [0, size(x,2)];
+        end
         
 %         get corresponding kspace data and plot
         
-        kx = sum(x(m,1:n)) * maxX / 100;
-        ky = -sum(y(m,1:n)) * maxY / 100;
+        kxtemp = kxtemp + x(m,n);
+        kytemp = kytemp - y(m,n);
         
 %         shift center to zero
-        kx = int32(kx + maxX);
-        ky = int32(ky + maxY);
+        kx = floor(kxtemp + maxX);
+        ky = floor(kytemp + maxY);
         
         if kx > sizeX
             kx = size(img,2);
@@ -152,18 +157,30 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         end
         
         if(adc(m,n) ~= 0)
-%             ky
-%             kx
             IMG_SAMPLED(ky,kx)=IMG(ky,kx);
-            img_sampled = ifft2(fftshift(IMG_SAMPLED));
-            if(mod(n,10) == 0)
+            if(mod(n,20) == 0)
+                img_sampled = ifft2(fftshift(IMG_SAMPLED));
                 imshow(abs(img_sampled),[],'Parent',handles.image_plot);
                 imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
             end
         end
 
-        pause(0.001);
-	end
+        pause(0.00000001);
+    end
+    img_sampled = ifft2(fftshift(IMG_SAMPLED));
+    imshow(abs(img_sampled),[],'Parent',handles.image_plot);
+    imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
+    plot(x(m,1:n),'Parent',handles.xgrad_plot);
+    handles.xgrad_plot.YLim = [-1.1, 1.1];
+    handles.xgrad_plot.XLim = [0, size(x,2)];
+
+    plot(y(m,1:n),'Parent',handles.ygrad_plot);
+    handles.ygrad_plot.YLim = [-1.1, 1.1];
+    handles.ygrad_plot.XLim = [0, size(x,2)];
+
+    plot(adc(m,1:n),'Parent',handles.adc_plot);
+    handles.adc_plot.YLim = [-0.05, 1.05];
+    handles.adc_plot.XLim = [0, size(x,2)];
 end
 
 %             imshow(abs(img_sampled),[],'Parent',handles.image_plot);
