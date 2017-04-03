@@ -22,7 +22,7 @@ function varargout = give(varargin)
 
 % Edit the above text to modify the response to help give
 
-% Last Modified by GUIDE v2.5 27-Mar-2017 14:21:19
+% Last Modified by GUIDE v2.5 03-Apr-2017 17:09:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -75,132 +75,13 @@ function varargout = give_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
+% --- Executes on button press in runCustom.
+function runCustom_Callback(hObject, eventdata, handles)
+% hObject    handle to runCustom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-img = imread(get(handles.filepath,'String'));
-img = imresize(img,[128 128]);
-img = double(rgb2gray(img));
-imshow(zeros(size(img)),[],'Parent',handles.image_plot);
-
-IMG = fftshift(fft2(img));
-IMG_SAMPLED = zeros(size(img));
-imshow(zeros(size(img)),[],'Parent',handles.kspace_plot);
-
 load(get(handles.gradient_data,'String'));
-
-sizeX = size(img, 2);
-sizeY = size(img, 1);
-maxX = sizeX / 2;
-maxY = sizeY / 2;
-
-plotMaxY = max(max(y)) + 0.05;
-plotMinY = min(min(y)) - 0.05;
-plotMaxX = max(max(x)) + 0.05;
-plotMinX = min(min(x)) - 0.05;
-
-% The following removes the need to reset YLim and XLim each loop iteration, but
-% I don't know how to reset the plot between each TR.
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
-% handles.xgrad_plot.XLim = [0, 1000];
-% hold(handles.xgrad_plot, 'all');
-% 
-% handles.ygrad_plot.YLim = [-1.1, 1.1];
-% handles.ygrad_plot.XLim = [0, 1000];
-% hold(handles.ygrad_plot, 'all');
-% 
-% handles.adc_plot.YLim = [-0.05, 1.05];
-% handles.adc_plot.XLim = [0, 1000];
-% hold(handles.adc_plot, 'all');
-
-for m = 1:size(x,1) %assume that x y and adc all have same number of trs
-    pause('on');
-    kxtemp = 0;
-    kytemp = 0;
-    hold(handles.kspace_plot, 'all');
-	for n = 1:size(x,2)
-        
-%         handle the drawing of gradient waveforms
-        if(mod(n,20) == 0)
-            plot(x(m,1:n),'Parent',handles.xgrad_plot);
-            handles.xgrad_plot.YLim = [plotMinX, plotMaxX];
-            handles.xgrad_plot.XLim = [0, size(x,2)];
-
-            plot(y(m,1:n),'Parent',handles.ygrad_plot);
-            handles.ygrad_plot.YLim = [plotMinY, plotMaxY];
-            handles.ygrad_plot.XLim = [0, size(x,2)];
-
-            plot(adc(m,1:n),'Parent',handles.adc_plot);
-            handles.adc_plot.YLim = [-0.05, 1.05];
-            handles.adc_plot.XLim = [0, size(x,2)];
-        end
-        
-%         get corresponding kspace data and plot
-        
-        kxtemp = kxtemp + x(m,n);
-        kytemp = kytemp - y(m,n);
-        
-%         shift center to zero
-        kx = floor(kxtemp + maxX);
-        ky = floor(kytemp + maxY);
-        
-        if kx > sizeX
-            kx = size(img,2);
-        end
-        
-        if ky > sizeY
-            ky = size(img,1);
-        end
-        
-         if kx < 1
-            kx = 1;
-        end
-        
-        if ky < 1
-            ky = 1;
-        end
-        
-%         if(mod(n,5) == 0)
-%          plot(kx,ky,'r.','MarkerSize',20, 'Parent',handles.kspace_plot)
-%         end
-        if(adc(m,n) ~= 0)
-            IMG_SAMPLED(ky,kx)=IMG(ky,kx);
-            if(mod(n,20) == 0)
-                img_sampled = ifft2(fftshift(IMG_SAMPLED));
-                imshow(abs(img_sampled),[],'Parent',handles.image_plot);
-                imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
-            end
-        end
-
-        pause(0.00000001);
-	end
-    img_sampled = ifft2(fftshift(IMG_SAMPLED));
-    imshow(abs(img_sampled),[],'Parent',handles.image_plot);
-    imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
-    plot(x(m,1:n),'Parent',handles.xgrad_plot);
-    handles.xgrad_plot.YLim = [plotMinX, plotMaxX];
-    handles.xgrad_plot.XLim = [0, size(x,2)];
-
-    plot(y(m,1:n),'Parent',handles.ygrad_plot);
-    handles.ygrad_plot.YLim = [plotMinY, plotMaxY];
-    handles.ygrad_plot.XLim = [0, size(x,2)];
-
-    plot(adc(m,1:n),'Parent',handles.adc_plot);
-    handles.adc_plot.YLim = [-0.05, 1.05];
-    handles.adc_plot.XLim = [0, size(x,2)];
-end
-
-%             imshow(abs(img_sampled),[],'Parent',handles.image_plot);
-%             imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
-% time(1:10) = 1;
-% plot(x .* time,'Parent',handles.xgrad_plot);
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
-% pause(5);
-% time(1:1000) = 1;
-% plot(x .* time,'Parent',handles.xgrad_plot);
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
+runSimulation(handles, x, y, adc);
 
 
 
@@ -390,3 +271,128 @@ function gradient_data_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on slider movement.
+function speedSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to speedSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+
+% --- Executes during object creation, after setting all properties.
+function speedSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to speedSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in runSpiral.
+function runSpiral_Callback(hObject, eventdata, handles)
+% hObject    handle to runSpiral (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% set(handles.stop, 'Value', 0);
+global stop;
+stop = false;
+
+numTRs = 16;
+gradLength = 200;
+
+y = zeros(numTRs,gradLength);
+x = zeros(numTRs,gradLength);
+
+
+t = 1/gradLength:1/gradLength:1;
+f = 5; % This affects how many times you circle around the origin
+n = t*5; % This affects how far out in k-space you go
+
+for k = 1:numTRs
+	y(k,:) = n .* sin(2*pi*f*t + (k - 1) * pi / (numTRs/2));
+	x(k,:) = n .* cos(2*pi*f*t + (k - 1) * pi / (numTRs/2));
+end
+
+
+adc = ones(numTRs,gradLength);
+
+runSimulation(handles, x, y, adc);
+
+
+% --- Executes on button press in run2dpr.
+function run2dpr_Callback(hObject, eventdata, handles)
+% hObject    handle to run2dpr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% set(handles.stop, 'Value', 0);
+global stop;
+stop = false;
+
+numTRs = 32;
+gradLength = 64; % This affects how far out in k-space you go
+
+y = zeros(numTRs,gradLength);
+x = zeros(numTRs,gradLength);
+
+for n = 1:numTRs
+	y(n,:) = sin(2*pi*(n-1)/numTRs);
+	x(n,:) = cos(2*pi*(n-1)/numTRs);
+end
+
+
+adc = ones(numTRs,gradLength);
+
+runSimulation(handles, x, y, adc);
+
+
+% --- Executes on button press in run2dft.
+function run2dft_Callback(hObject, eventdata, handles)
+% hObject    handle to run2dft (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% set(handles.stop, 'Value', 0);
+global stop;
+stop = false;
+
+numTRs = 16;
+gradLength = 128 + 64;
+
+y = zeros(numTRs, gradLength);
+for n = 1:numTRs
+	y(n,1:64) = (n - 1 - numTRs/2) / (numTRs/2);
+end
+
+x = zeros(numTRs, gradLength);
+x(:,1:64) = -1;
+x(:,65:end) = 1;
+
+adc = zeros(numTRs, gradLength);
+adc(:,65:end) = 1;
+
+runSimulation(handles, x, y, adc);
+
+
+% --- Executes on button press in drawMode.
+function drawMode_Callback(hObject, eventdata, handles)
+% hObject    handle to drawMode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in stop.
+function stop_Callback(hObject, eventdata, handles)
+% hObject    handle to stop (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global stop;
+stop = true;
+% set(handles.stop, 'Value', 1);
+disp('called the callback to stop');

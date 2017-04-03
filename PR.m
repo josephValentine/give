@@ -1,6 +1,6 @@
 % This creates gradient waveforms for a 2DPR sequence.
 
-numTRs = 16;
+numTRs = 32;
 gradLength = 64; % This affects how far out in k-space you go
 
 y = zeros(numTRs,gradLength);
