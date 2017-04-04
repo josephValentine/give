@@ -362,7 +362,7 @@ function run2dft_Callback(hObject, eventdata, handles)
 global stop;
 stop = false;
 
-numTRs = 16;
+numTRs = 128;
 gradLength = 128 + 64;
 
 y = zeros(numTRs, gradLength);
@@ -385,6 +385,20 @@ function drawMode_Callback(hObject, eventdata, handles)
 % hObject    handle to drawMode (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+im=ones(128,128);
+for n=1:3
+trajectory = floor(ginput(1))
+% trajectory = floor(get(gca,'CurrentPoint'))
+im(trajectory(1,2), trajectory(1,1))=0;
+imshow(im,[],'Parent',handles.kspace_plot);
+pause(1)
+end
+
+% for n=1:size(trajectory,1)
+%     im(trajectory(n,1), trajectory(n,2))=1;
+% end
+    
+
 
 
 % --- Executes on button press in stop.
@@ -395,4 +409,4 @@ function stop_Callback(hObject, eventdata, handles)
 global stop;
 stop = true;
 % set(handles.stop, 'Value', 1);
-disp('called the callback to stop');
+% disp('called the callback to stop');
