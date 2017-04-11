@@ -22,7 +22,7 @@ function varargout = give(varargin)
 
 % Edit the above text to modify the response to help give
 
-% Last Modified by GUIDE v2.5 03-Apr-2017 17:09:05
+% Last Modified by GUIDE v2.5 10-Apr-2017 18:00:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -82,145 +82,6 @@ function runCustom_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 load(get(handles.gradient_data,'String'));
 runSimulation(handles, x, y, adc);
-
-
-
-
-function deltax_Callback(hObject, eventdata, handles)
-% hObject    handle to deltax (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of deltax as text
-%        str2double(get(hObject,'String')) returns contents of deltax as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function deltax_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to deltax (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function deltay_Callback(hObject, eventdata, handles)
-% hObject    handle to deltay (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of deltay as text
-%        str2double(get(hObject,'String')) returns contents of deltay as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function deltay_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to deltay (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function deltar_Callback(hObject, eventdata, handles)
-% hObject    handle to deltar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of deltar as text
-%        str2double(get(hObject,'String')) returns contents of deltar as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function deltar_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to deltar (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function adc_data_Callback(hObject, eventdata, handles)
-% hObject    handle to adc_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of adc_data as text
-%        str2double(get(hObject,'String')) returns contents of adc_data as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function adc_data_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to adc_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function ygrad_data_Callback(hObject, eventdata, handles)
-% hObject    handle to ygrad_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of ygrad_data as text
-%        str2double(get(hObject,'String')) returns contents of ygrad_data as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function ygrad_data_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ygrad_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function xgrad_data_Callback(hObject, eventdata, handles)
-% hObject    handle to xgrad_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of xgrad_data as text
-%        str2double(get(hObject,'String')) returns contents of xgrad_data as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function xgrad_data_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to xgrad_data (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 
@@ -380,19 +241,52 @@ adc(:,65:end) = 1;
 runSimulation(handles, x, y, adc);
 
 
-% --- Executes on button press in drawMode.
-function drawMode_Callback(hObject, eventdata, handles)
-% hObject    handle to drawMode (see GCBO)
+% --- Executes on button press in randomUndersample.
+function randomUndersample_Callback(hObject, eventdata, handles)
+% hObject    handle to randomUndersample (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-im=ones(128,128);
-for n=1:3
-trajectory = floor(ginput(1))
-% trajectory = floor(get(gca,'CurrentPoint'))
-im(trajectory(1,2), trajectory(1,1))=0;
-imshow(im,[],'Parent',handles.kspace_plot);
-pause(1)
+global stop
+stop = false;
+
+indices = zeros(1,128);
+indices(60:69) = 0; % Set this to 1 if we want to guarantee that the center of
+                    % k-space is sampled
+count = 0;
+while count < 64 % Set this to 54 if the above is set to 1
+    num = floor(normrnd(65, 20));
+    if num > 0 && num <= 128 && indices(num) == 0
+        indices(num) = 1;
+        count = count + 1;
+    end
 end
+
+indices = strfind(indices, 1);
+y = zeros(length(indices), 128+64);
+n = 1;
+for index = indices
+	y(n,1:64) = (index - 1 - 64) / 64;
+	n = n + 1;
+end
+
+x = zeros(length(indices), 128+64);
+x(:,1:64) = -1;
+x(:,65:end) = 1;
+
+adc = zeros(length(indices), 128+64);
+adc(:,65:end) = 1;
+
+runSimulation(handles, x, y, adc);
+
+% Old K-space draw code
+% im=ones(128,128);
+% for n=1:3
+% trajectory = floor(ginput(1))
+% % trajectory = floor(get(gca,'CurrentPoint'))
+% im(trajectory(1,2), trajectory(1,1))=0;
+% imshow(im,[],'Parent',handles.kspace_plot);
+% pause(1)
+% end
 
 % for n=1:size(trajectory,1)
 %     im(trajectory(n,1), trajectory(n,2))=1;

@@ -1,7 +1,7 @@
 function runSimulation(handles, x, y, adc)
 global stop;
 
-speed=round(get(handles.speedSlider, 'Value'))
+speed=round(get(handles.speedSlider, 'Value'));
 
 img = imread(get(handles.filepath,'String'));
 img = imresize(img,[128 128]);
