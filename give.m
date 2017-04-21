@@ -80,6 +80,8 @@ function runCustom_Callback(hObject, eventdata, handles)
 % hObject    handle to runCustom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global stop
+stop = false;
 load(get(handles.gradient_data,'String'));
 runSimulation(handles, x, y, adc);
 
