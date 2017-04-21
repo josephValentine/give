@@ -21,4 +21,4 @@ end
 
 adc = ones(numTRs,gradLength); % Set the ADC to always be on
 
-save('sample_gradients', 'x', 'y', 'adc') % Save x, y, and adc to a .mat file
+save('custom', 'x', 'y', 'adc') % Save x, y, and adc to a .mat file

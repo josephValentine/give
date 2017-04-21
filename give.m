@@ -244,10 +244,10 @@ global stop
 stop = false;
 
 indices = zeros(1,128);
-indices(60:69) = 0; % Set this to 1 if we want to guarantee that the center of
+indices(63:64) = 1; % Set this to 1 if we want to guarantee that the center of
                     % k-space is sampled
 count = 0;
-while count < 64 % Set this to 54 if the above is set to 1
+while count < 30 % Set this to 32 if the above is set to 0
     num = floor(normrnd(65, 20));
     if num > 0 && num <= 128 && indices(num) == 0
         indices(num) = 1;
