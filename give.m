@@ -52,8 +52,6 @@ function give_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to give (see VARARGIN)
 
-% clear handles.image_plot
-% clear handles.kspace_plot
 % Choose default command line output for give
 handles.output = hObject;
 
@@ -94,9 +92,6 @@ function filepath_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of filepath as text
 %        str2double(get(hObject,'String')) returns contents of filepath as a double
-% handles.path = get(hObject, 'String');
-% guidata(gcbo,handles);
-% disp('hello everyone, in filepath callback')
 
 
 
@@ -164,7 +159,6 @@ function runSpiral_Callback(hObject, eventdata, handles)
 % hObject    handle to runSpiral (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% set(handles.stop, 'Value', 0);
 global stop;
 stop = false;
 
@@ -195,7 +189,6 @@ function run2dpr_Callback(hObject, eventdata, handles)
 % hObject    handle to run2dpr (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% set(handles.stop, 'Value', 0);
 global stop;
 stop = false;
 
@@ -221,7 +214,6 @@ function run2dft_Callback(hObject, eventdata, handles)
 % hObject    handle to run2dft (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% set(handles.stop, 'Value', 0);
 global stop;
 stop = false;
 
@@ -279,20 +271,6 @@ adc = zeros(length(indices), 128+64);
 adc(:,65:end) = 1;
 
 runSimulation(handles, x, y, adc);
-
-% Old K-space draw code
-% im=ones(128,128);
-% for n=1:3
-% trajectory = floor(ginput(1))
-% % trajectory = floor(get(gca,'CurrentPoint'))
-% im(trajectory(1,2), trajectory(1,1))=0;
-% imshow(im,[],'Parent',handles.kspace_plot);
-% pause(1)
-% end
-
-% for n=1:size(trajectory,1)
-%     im(trajectory(n,1), trajectory(n,2))=1;
-% end
     
 
 
@@ -304,5 +282,3 @@ function stop_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global stop;
 stop = true;
-% set(handles.stop, 'Value', 1);
-% disp('called the callback to stop');

@@ -22,21 +22,7 @@ plotMinY = min(min(y)) - 0.05;
 plotMaxX = max(max(x)) + 0.05;
 plotMinX = min(min(x)) - 0.05;
 
-% The following removes the need to reset YLim and XLim each loop iteration, but
-% I don't know how to reset the plot between each TR.
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
-% handles.xgrad_plot.XLim = [0, 1000];
-% hold(handles.xgrad_plot, 'all');
-% 
-% handles.ygrad_plot.YLim = [-1.1, 1.1];
-% handles.ygrad_plot.XLim = [0, 1000];
-% hold(handles.ygrad_plot, 'all');
-% 
-% handles.adc_plot.YLim = [-0.05, 1.05];
-% handles.adc_plot.XLim = [0, 1000];
-% hold(handles.adc_plot, 'all');
-
-for m = 1:size(x,1) %assume that x y and adc all have same number of trs
+for m = 1:size(x,1) % x, y, and adc should be same size
     pause('on');
     kxtemp = 0;
     kytemp = 0;
@@ -44,8 +30,8 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
 	for n = 1:size(x,2)
         if stop
             return
-        end
-%         handle the drawing of gradient waveforms
+		end
+        % Handle the drawing of gradient waveforms
         if(mod(n,speed) == 0)
             plot(x(m,1:n),'Parent',handles.xgrad_plot);
             handles.xgrad_plot.YLim = [plotMinX, plotMaxX];
@@ -60,15 +46,16 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
             handles.adc_plot.XLim = [0, size(x,2)];
         end
         
-%         get corresponding kspace data and plot
+        % Get corresponding k-space data and plot it
         
         kxtemp = kxtemp + x(m,n);
         kytemp = kytemp - y(m,n);
         
-%         shift center to zero
+        % Shift center to zero
         kx = floor(kxtemp + maxX);
         ky = floor(kytemp + maxY);
-        
+		
+		% Make sure we don't go out of bounds
         if kx > sizeX
             kx = size(img,2);
         end
@@ -83,11 +70,9 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
         
         if ky < 1
             ky = 1;
-        end
+		end
         
-%         if(mod(n,5) == 0)
-%          plot(kx,ky,'r.','MarkerSize',20, 'Parent',handles.kspace_plot)
-%         end
+		% Sample k-space if the ADC is on
         if(adc(m,n) ~= 0)
             IMG_SAMPLED(ky,kx)=IMG(ky,kx);
             if(mod(n,speed) == 0)
@@ -114,15 +99,5 @@ for m = 1:size(x,1) %assume that x y and adc all have same number of trs
     handles.adc_plot.YLim = [-0.05, 1.05];
     handles.adc_plot.XLim = [0, size(x,2)];
 end
-
-%             imshow(abs(img_sampled),[],'Parent',handles.image_plot);
-%             imshow(log(abs(IMG_SAMPLED)),[],'Parent',handles.kspace_plot);
-% time(1:10) = 1;
-% plot(x .* time,'Parent',handles.xgrad_plot);
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
-% pause(5);
-% time(1:1000) = 1;
-% plot(x .* time,'Parent',handles.xgrad_plot);
-% handles.xgrad_plot.YLim = [-1.1, 1.1];
 
 end
