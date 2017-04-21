@@ -1,6 +1,6 @@
 % This creates gradient waveforms for a non-uniform spiral trajectory.
 
-numTRs = 8; % Number of TRs in scan
+numTRs = 16; % Number of TRs in scan
 gradLength = 200; % Number of data points in waveforms
 
 x = zeros(numTRs,gradLength); % Initialize x and y
@@ -9,7 +9,7 @@ y = zeros(numTRs,gradLength);
 t = 1/gradLength:1/gradLength:1; % Create vector of time points
 f = 5; % Set the frequency of the sinusoidal waveforms
        % This affects how many times you circle around the origin
-A = t*5; % Set the amplitude of the sinusoidal waveforms as a function of t
+A = t*8; % Set the amplitude of the sinusoidal waveforms as a function of t
          % This affects how far out in k-space you go
 
 % Change the initial phase of the sinusoidal waveforms each TR
